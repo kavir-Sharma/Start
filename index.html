@@ -3,22 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Leo Club - Registration</title>
+  <title>Leo Club of Kathmandu Bhrikuti - Registration</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
+  <h1 class="main-heading">Join the Leo Club</h1>
+
   <form id="registerForm">
-    <h2>Join the Leo Club</h2>
+    <div class="form-header">
+      <img src="Bhrikuti logo 1.png" alt="Leo Club Logo" class="club-logo" />
+      <h2>Leo Club of Kathmandu Bhrikuti</h2>
+    </div>
+
     <input type="text" name="fullName" placeholder="Full Name" required />
     <input type="email" name="email" placeholder="Email Address" required />
-    <input type="text" name="dob" placeholder="Date of Birth" required />
-    <input type="tel" name="contactNumber" placeholder="Contact Number" pattern="[0-9]{10}" required />
+    <input type="text" name="dob" placeholder="Date of Birth (YYYY-MM-DD)" required />
+    <input type="tel" name="contactNumber" placeholder="Contact Number" required />
+    <select name="ageGroup" required>
+      <option value="">Select Age Group</option>
+      <option value="alpha">Alpha (12–18)</option>
+      <option value="omega">Omega (18–30)</option>
+    </select>
     <input type="text" name="address" placeholder="Address" required />
     <textarea name="reason" placeholder="Why do you want to join this club?" required></textarea>
     <button type="submit">Submit</button>
   </form>
-
 
   <table id="dataTable" style="display: none;">
     <thead>
@@ -27,13 +37,13 @@
         <th>Email</th>
         <th>DOB</th>
         <th>Contact</th>
+        <th>Age Group</th>
         <th>Address</th>
-        <th>Reason to Join</th>
+        <th>Reason</th>
+        <th>Action</th>
       </tr>
     </thead>
-
     <tbody></tbody>
-    
   </table>
 
   <script src="script.js"></script>
