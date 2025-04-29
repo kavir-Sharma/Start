@@ -30,5 +30,7 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
     tbody.appendChild(newRow);
     table.style.display = "table";
     form.reset();
-  });
+  }
+ )
+;
   
