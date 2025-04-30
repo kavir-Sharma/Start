@@ -1,11 +1,9 @@
-/* Universal selector */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* Element selector */
 body {
   font-family: 'Segoe UI', sans-serif;
   background: #e4fbfb;
@@ -20,7 +18,6 @@ body {
   margin-bottom: 20px;
 }
 
-/* ID selector */
 #registerForm {
   background: #ffffff;
   padding: 30px 25px;
@@ -30,7 +27,6 @@ body {
   width: 100%;
 }
 
-/* Class selector */
 .form-header {
   display: flex;
   align-items: center;
@@ -48,7 +44,6 @@ body {
   color: #00796b;
 }
 
-/* Attribute selector */
 input[type="text"], input[type="email"], input[type="tel"], select, textarea {
   width: 100%;
   padding: 10px;
@@ -80,6 +75,27 @@ button:hover {
   background: #004d40;
 }
 
+.delete-btn {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.delete-btn:hover {
+  background-color: #b71c1c;
+}
+
+td:last-child {
+  text-align: center;
+  vertical-align: middle;
+}
+
 table {
   margin-top: 30px;
   border-collapse: collapse;
@@ -102,6 +118,7 @@ th {
   color: white;
 }
 
+/* Media query for mobile responsiveness */
 @media (max-width: 600px) {
   form, table {
     width: 100%;
