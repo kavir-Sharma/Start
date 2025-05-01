@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Leo Club of Kathmandu Bhrikuti - Registration</title>
+  <title>Leo Club Registration</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -16,6 +16,12 @@
       <h2>Leo Club of Kathmandu Bhrikuti</h2>
     </div>
 
+    <select id="storageType">
+      <option value="local">Local Storage</option>
+      <option value="session">Session Storage</option>
+      <option value="cookie">Cookies</option>
+    </select>
+
     <input type="text" name="fullName" placeholder="Full Name" required />
     <input type="email" name="email" placeholder="Email Address" required />
     <input type="text" name="dob" placeholder="Date of Birth (YYYY-MM-DD)" required />
@@ -27,6 +33,7 @@
     </select>
     <input type="text" name="address" placeholder="Address" required />
     <textarea name="reason" placeholder="Why do you want to join this club?" required></textarea>
+
     <button type="submit">Submit</button>
   </form>
 

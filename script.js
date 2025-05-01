@@ -1,9 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
-  loadFromLocalStorage();
+  const form = document.getElementById("registerForm");
+  const storageSelector = document.getElementById("storageType");
+  let editIndex = null;
 
-  document.getElementById('registerForm').addEventListener('submit', function (e) {
+  loadFromStorage();
+
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const form = e.target;
 
     const fullName = form.fullName.value.trim();
     const email = form.email.value.trim();
@@ -14,74 +17,115 @@ document.addEventListener("DOMContentLoaded", () => {
     const reason = form.reason.value.trim();
 
     const nameRegex = /^[A-Za-z]+(?: [A-Za-z]+)*$/;
-    if (!fullName || !nameRegex.test(fullName)) {
-      alert("Please enter a valid full name (letters only, no numbers or extra whitespace).");
-      return;
-    }
-
     const phoneRegex = /^\+?[1-9]\d{7,14}$/;
-    if (!phoneRegex.test(contactNumber)) {
-      alert("Please enter a valid international phone number (e.g. +9779812345678).");
-      return;
-    }
 
-    if (!email || !dob || !ageGroup || !address || !reason) {
-      alert("Please fill all the fields.");
-      return;
-    }
+    if (!nameRegex.test(fullName)) return alert("Invalid name.");
+    if (!phoneRegex.test(contactNumber)) return alert("Invalid phone number.");
 
     const newEntry = { fullName, email, dob, contactNumber, ageGroup, address, reason };
-    saveToLocalStorage(newEntry);
-    addRowToTable(newEntry);
+    const data = getStorageData();
+
+    if (editIndex !== null) {
+      data[editIndex] = newEntry;
+      editIndex = null;
+    } else {
+      data.push(newEntry);
+    }
+
+    setStorageData(data);
+    renderTable(data);
     form.reset();
   });
-});
 
-function saveToLocalStorage(entry) {
-  const data = JSON.parse(localStorage.getItem("leoRegistrations") || "[]");
-  data.push(entry);
-  localStorage.setItem("leoRegistrations", JSON.stringify(data));
-}
-
-function loadFromLocalStorage() {
-  const data = JSON.parse(localStorage.getItem("leoRegistrations") || "[]");
-  if (data.length > 0) {
-    data.forEach(entry => addRowToTable(entry));
-  }
-}
-
-function addRowToTable({ fullName, email, dob, contactNumber, ageGroup, address, reason }) {
-  const table = document.getElementById('dataTable');
-  const tbody = table.querySelector('tbody');
-  const newRow = document.createElement('tr');
-
-  newRow.innerHTML = `
-    <td>${fullName}</td>
-    <td>${email}</td>
-    <td>${dob}</td>
-    <td>${contactNumber}</td>
-    <td>${ageGroup}</td>
-    <td>${address}</td>
-    <td>${reason}</td>
-    <td><button class="delete-btn">Delete</button></td>
-  `;
-
-  newRow.querySelector('.delete-btn').addEventListener('click', () => {
-    if (confirm("Are you sure you want to delete this entry?")) {
-      newRow.remove();
-      deleteFromLocalStorage(fullName, email);
-      if (!tbody.hasChildNodes()) {
-        table.style.display = "none";
-      }
-    }
+  storageSelector.addEventListener("change", () => {
+    editIndex = null;
+    loadFromStorage();
   });
 
-  tbody.appendChild(newRow);
-  table.style.display = "table";
-}
+  function loadFromStorage() {
+    const data = getStorageData();
+    renderTable(data);
+  }
 
-function deleteFromLocalStorage(fullName, email) {
-  let data = JSON.parse(localStorage.getItem("leoRegistrations") || "[]");
-  data = data.filter(entry => !(entry.fullName === fullName && entry.email === email));
-  localStorage.setItem("leoRegistrations", JSON.stringify(data));
-}
+  function renderTable(data) {
+    const table = document.getElementById("dataTable");
+    const tbody = table.querySelector("tbody");
+    tbody.innerHTML = "";
+
+    if (data.length === 0) {
+      table.style.display = "none";
+      return;
+    }
+
+    data.forEach((entry, index) => {
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${entry.fullName}</td>
+        <td>${entry.email}</td>
+        <td>${entry.dob}</td>
+        <td>${entry.contactNumber}</td>
+        <td>${entry.ageGroup}</td>
+        <td>${entry.address}</td>
+        <td>${entry.reason}</td>
+        <td>
+          <button class="edit-btn">Edit</button>
+          <button class="delete-btn">Delete</button>
+        </td>
+      `;
+
+      row.querySelector(".edit-btn").addEventListener("click", () => {
+        form.fullName.value = entry.fullName;
+        form.email.value = entry.email;
+        form.dob.value = entry.dob;
+        form.contactNumber.value = entry.contactNumber;
+        form.ageGroup.value = entry.ageGroup;
+        form.address.value = entry.address;
+        form.reason.value = entry.reason;
+        editIndex = index;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      row.querySelector(".delete-btn").addEventListener("click", () => {
+        if (confirm("Delete this entry?")) {
+          data.splice(index, 1);
+          setStorageData(data);
+          renderTable(data);
+        }
+      });
+
+      tbody.appendChild(row);
+    });
+
+    table.style.display = "table";
+  }
+
+  function getStorageData() {
+    const type = storageSelector.value;
+    if (type === "local") return JSON.parse(localStorage.getItem("leoRegistrations") || "[]");
+    if (type === "session") return JSON.parse(sessionStorage.getItem("leoRegistrations") || "[]");
+    if (type === "cookie") return JSON.parse(getCookie("leoRegistrations") || "[]");
+    return [];
+  }
+
+  function setStorageData(data) {
+    const type = storageSelector.value;
+    const str = JSON.stringify(data);
+
+    if (type === "local") localStorage.setItem("leoRegistrations", str);
+    else if (type === "session") sessionStorage.setItem("leoRegistrations", str);
+    else if (type === "cookie") setCookie("leoRegistrations", str, 7);
+  }
+
+  function setCookie(name, value, days) {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+  }
+
+  function getCookie(name) {
+    return document.cookie.split('; ').reduce((r, v) => {
+      const parts = v.split('=');
+      return parts[0] === name ? decodeURIComponent(parts[1]) : r;
+    }, "");
+  }
+});
