@@ -62,7 +62,7 @@ textarea {
 }
 
 button[type="submit"] {
-  background: #00796b;
+  background: #6f07ef;
   color: white;
   padding: 10px;
   border: none;
@@ -76,7 +76,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-  background: #004d40;
+  background: #260378;
 }
 
 .action-btn {
@@ -95,7 +95,7 @@ button[type="submit"]:hover {
 }
 
 .edit-btn:hover {
-  background-color: #2980b9;
+  background-color: #5211e9;
 }
 
 .delete-btn {
@@ -113,7 +113,7 @@ table {
   width: 100%;
   max-width: 1000px;
   background-color: white;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(47, 7, 86, 0.1);
   border-radius: 10px;
   overflow: hidden;
 }
@@ -125,7 +125,7 @@ th, td {
 }
 
 th {
-  background-color: #00796b;
+  background-color: #4c35e3;
   color: white;
 }
 

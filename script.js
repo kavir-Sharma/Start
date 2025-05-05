@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitButton = form.querySelector('button[type="submit"]');
   let editIndex = null;
 
+  let registrationIdCounter = parseInt(localStorage.getItem("leoRegIdCounter")) || 660100;
+
   loadFromStorage();
 
   form.addEventListener("submit", (e) => {
@@ -23,15 +25,21 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!nameRegex.test(fullName)) return alert("Invalid name.");
     if (!phoneRegex.test(contactNumber)) return alert("Invalid phone number.");
 
-    const newEntry = { fullName, email, dob, contactNumber, ageGroup, address, reason };
     const data = getStorageData();
 
+    let newEntry;
+
     if (editIndex !== null) {
+      const existingId = data[editIndex].registrationId;
+      newEntry = { registrationId: existingId, fullName, email, dob, contactNumber, ageGroup, address, reason };
       data[editIndex] = newEntry;
       editIndex = null;
       submitButton.textContent = "Submit";
       showPopup("Entry updated successfully.");
     } else {
+      const registrationId = registrationIdCounter++;
+      localStorage.setItem("leoRegIdCounter", registrationIdCounter); // Save counter to localStorage
+      newEntry = { registrationId, fullName, email, dob, contactNumber, ageGroup, address, reason };
       data.push(newEntry);
     }
 
@@ -65,6 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const row = document.createElement("tr");
 
       row.innerHTML = `
+        <td>${entry.registrationId}</td>
         <td>${entry.fullName}</td>
         <td>${entry.email}</td>
         <td>${entry.dob}</td>
