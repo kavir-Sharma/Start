@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("registerForm");
   const storageSelector = document.getElementById("storageType");
+  const submitButton = form.querySelector('button[type="submit"]');
   let editIndex = null;
 
   loadFromStorage();
@@ -28,6 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (editIndex !== null) {
       data[editIndex] = newEntry;
       editIndex = null;
+      submitButton.textContent = "Submit";
+      showPopup("Entry updated successfully.");
     } else {
       data.push(newEntry);
     }
@@ -39,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   storageSelector.addEventListener("change", () => {
     editIndex = null;
+    submitButton.textContent = "Submit";
     loadFromStorage();
   });
 
@@ -69,8 +73,8 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${entry.address}</td>
         <td>${entry.reason}</td>
         <td>
-          <button class="edit-btn">Edit</button>
-          <button class="delete-btn">Delete</button>
+          <button class="edit-btn action-btn">Edit</button>
+          <button class="delete-btn action-btn">Delete</button>
         </td>
       `;
 
@@ -83,11 +87,12 @@ document.addEventListener("DOMContentLoaded", () => {
         form.address.value = entry.address;
         form.reason.value = entry.reason;
         editIndex = index;
+        submitButton.textContent = "Save";
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
 
       row.querySelector(".delete-btn").addEventListener("click", () => {
-        if (confirm("Delete this entry?")) {
+        if (confirm("Delete this?")) {
           data.splice(index, 1);
           setStorageData(data);
           renderTable(data);
@@ -127,5 +132,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const parts = v.split('=');
       return parts[0] === name ? decodeURIComponent(parts[1]) : r;
     }, "");
+  }
+
+  function showPopup(message) {
+    const popup = document.getElementById("customPopup");
+    popup.textContent = message;
+    popup.style.display = "block";
+
+    setTimeout(() => {
+      popup.style.display = "none";
+    }, 3000);
   }
 });
